@@ -1,1 +1,2 @@
 - Maksym Shalenyi
+- Tom Gross
