@@ -1,5 +1,4 @@
 install:
-  - sed -ie "s#travis-4.x.cfg#travis-$PLONE.x.cfg#" travis.cfg
   - mkdir -p buildout-cache/downloads
   - pip install Pillow
   - python bootstrap.py -c travis.cfg
@@ -14,9 +13,6 @@ env:
       PhW4f8CM1W7MfA6VmQHlS0prCyMH/tWm49QeOSPEMIqORn+Z0V4Iwv6PKrDw
       iXHPAtOGrWAJySUbbflCOX7orpIXF/4jW0IpDKeddDzZvP/FWEl/QahZtgib
       8Zo5BoQWClEz5ykB7jGl2AkyJSUUFVuhEKuLGiuTsJIfbs+gb5o=
-  matrix:
-  - PLONE=4.2
-  - PLONE=4.3
 python:
   - "2.7"
 language: python
