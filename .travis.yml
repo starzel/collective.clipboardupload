@@ -16,12 +16,9 @@ env:
       iXHPAtOGrWAJySUbbflCOX7orpIXF/4jW0IpDKeddDzZvP/FWEl/QahZtgib
       8Zo5BoQWClEz5ykB7jGl2AkyJSUUFVuhEKuLGiuTsJIfbs+gb5o=
   matrix:
-  - PLONE=4.0
-  - PLONE=4.1
   - PLONE=4.2
   - PLONE=4.3
 python:
-- 2.6
 - 2.7
 language: python
 before_script:
@@ -29,13 +26,3 @@ before_script:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
 script: bin/test
-matrix:
-  exclude:
-  - env: PLONE=4.0
-    python: 2.7
-  - env: PLONE=4.1
-    python: 2.7
-  - env: PLONE=4.2
-    python: 2.6
-  - env: PLONE=4.3
-    python: 2.6
