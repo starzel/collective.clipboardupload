@@ -18,6 +18,7 @@ Compatibility
 
 * Plone 4.0
 * Plone 4.1
+* Plone 4.2
 * Plone 4.3
 
 Know browser issues: Ctrl+V does not always work for me in Firefox (MacOSX 10.8), so menu Edit -> Paste to the rescue. 
@@ -44,7 +45,7 @@ Usage
 
 Open an image in, for example, Preview.app select an area and copy it to clipboard. Switch to Plone TinyMCE and Paste. Use your browser menu Edit -> Paste in case Ctrl+V fails.
 
-The picture will be automatically uploaded to the edited page containing folder and stored as an Plone Image. Upon save the Image path is converted to *resolveuid* link.
+The picture will be automatically uploaded to the edited page containing folder and stored as an Plone Image. Upon save the Image path is converted to *resolveuid* link. The id of the image object is automatically generated from the prefix `Clipboard_image_` and the current timestamp. You can customize this behavior by adding a Python script `generate_image_id` to your Plone site. This script takes the context as parameter and needs to return a string which is used as image Id.
 
 Authors
 -------
