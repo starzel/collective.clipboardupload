@@ -3,7 +3,6 @@
 This module is responsible for searching image tags that contain image data
 inside them and saving it like an Image object. Also each image tag that
 contains image data will be replaced with the link to the created Images object
-    >>> DateTime.strftime = lambda x,y: 'UniqueId'
     >>> class Image():
     ...     def __init__(self, uid):
     ...         self.uid = uid
@@ -27,6 +26,8 @@ contains image data will be replaced with the link to the created Images object
     ...         print data
     ...     def getParentNode(self):
     ...         return self
+    ...     def generate_image_id(self, context):
+    ...         return 'Clipboard_image_UniqueId'
     >>> transaction.commit = lambda : None
     >>> context = Context()
 
@@ -88,11 +89,32 @@ import re
 import transaction
 import operator
 from itertools import ifilter
-from DateTime import DateTime
+from datetime import datetime
 from bs4 import BeautifulSoup
 from zope.event import notify
 
 RE_IMAGE_DATA = re.compile(r'data:image/\w{2,5};base64,(.+)')
+
+
+def generate_image_id(context):
+    """ Generate an Id for images from clipboard
+
+    If a function `generate_image_id` can be acquired this
+    is used to generate the id of the clipboard image.
+    Otherwise it is constructed from the prefix
+    `Clipboard_image_` and the current datetime.
+
+
+    :param context: [required] Context of the object refering the image
+    :returns: Unique id for the image object
+    :rtype: string
+    """
+ 
+    if getattr(context, 'generate_image_id', None):
+        meth = context.generate_image_id
+    else:
+        meth = lambda context: 'Clipboard_image_%s' % datetime.now().strftime("%Y-%m-%d-%H%M.%f")
+    return meth(context)
 
 
 def generate_image_object(context, data):
@@ -100,7 +122,7 @@ def generate_image_object(context, data):
     Creates Image object on given context and returns its resolved UID
 
     """
-    uid = 'Clipboard_image_%s' % DateTime().strftime("%Y-%m-%d-%H%M.%f")
+    uid = generate_image_id(context)
     name = context.invokeFactory(type_name='Image', id=uid)
     obj = context[name]
     obj.setImage(base64.b64decode(data))
