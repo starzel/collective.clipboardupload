@@ -1,11 +1,11 @@
 *.py[cod]
+pip-selfcheck.json
 
 # C extensions
 *.so
 
 # Packages
-*.egg
-*.egg-info
+*.egg*
 dist
 build
 eggs
@@ -17,6 +17,7 @@ develop-eggs
 .installed.cfg
 lib
 lib64
+include
 
 # Installer logs
 pip-log.txt
