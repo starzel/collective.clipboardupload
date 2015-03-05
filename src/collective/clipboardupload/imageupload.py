@@ -27,8 +27,6 @@ contains image data will be replaced with the link to the created Images object
     ...         print data
     ...     def getParentNode(self):
     ...         return self
-    ...     def getId(self):
-    ...         return 'myid'
     >>> transaction.commit = lambda : None
     >>> context = Context()
 
@@ -47,28 +45,28 @@ contains image data will be replaced with the link to the created Images object
                        'cyBpcyByYXcgaW1hZ2UgZGF0YQ=="  alt="alt" />'
     >>> extract_image_data_from_body(context, None)
     This is raw image data
-    <img alt="alt" class="class" src="resolveuid/myid_cb_image_UniqueId1"/>
+    <img alt="alt" class="class" src="resolveuid/Clipboard_image_UniqueId1"/>
 
     Single quotes notation:
     >>> context.text = "<img  class='class' src='data:image/jpeg;base64,VGhp"\
                        "cyBpcyByYXcgaW1hZ2UgZGF0YQ=='  alt='alt' />"
     >>> extract_image_data_from_body(context, None)
     This is raw image data
-    <img alt="alt" class="class" src="resolveuid/myid_cb_image_UniqueId2"/>
+    <img alt="alt" class="class" src="resolveuid/Clipboard_image_UniqueId2"/>
 
     No quotes notation:
     >>> context.text = "<img  class=class src=data:image/jpeg;base64,VGhpcy"\
                        "BpcyByYXcgaW1hZ2UgZGF0YQ==  />"
     >>> extract_image_data_from_body(context, None)
     This is raw image data
-    <img class="class" src="resolveuid/myid_cb_image_UniqueId3"/>
+    <img class="class" src="resolveuid/Clipboard_image_UniqueId3"/>
 
     Image with tricky attrs:
     >>> context.text = " <img alt=' /> ' src='data:image/jpeg;base64,VGhpcyB"\
                        "pcyByYXcgaW1hZ2UgZGF0YQ=='  />"
     >>> extract_image_data_from_body(context, None)
     This is raw image data
-    <img alt=" /&gt; " src="resolveuid/myid_cb_image_UniqueId4"/>
+    <img alt=" /&gt; " src="resolveuid/Clipboard_image_UniqueId4"/>
 
     Image inside other tags:
     >>> context.text = " <div><img src='data:image/jpeg;base64,VGhpcyBpcyB"\
@@ -82,7 +80,7 @@ contains image data will be replaced with the link to the created Images object
     This is raw image data
     This is raw image data
     This is raw image data
-    <div><img src="resolveuid/myid_cb_image_UniqueId5"/></div><div><p><img src="resolveuid/myid_cb_image_UniqueId6"/><img src="resolveuid/myid_cb_image_UniqueId7"/></p></div>&lt;img class='class' src='data:image/tiff;base64,VGhpcyBpcyByYXcgaW1hZ2UgZGF0YQ==' /&gt;
+    <div><img src="resolveuid/Clipboard_image_UniqueId5"/></div><div><p><img src="resolveuid/Clipboard_image_UniqueId6"/><img src="resolveuid/Clipboard_image_UniqueId7"/></p></div>&lt;img class='class' src='data:image/tiff;base64,VGhpcyBpcyByYXcgaW1hZ2UgZGF0YQ==' /&gt;
 
 """
 import base64
@@ -102,8 +100,7 @@ def generate_image_object(context, data):
     Creates Image object on given context and returns its resolved UID
 
     """
-    uid = '%s_cb_image_%s' % (context.getId(),
-                              DateTime().strftime("%Y-%m-%d-%H%M.%f"))
+    uid = 'Clipboard_image_%s' % DateTime().strftime("%Y-%m-%d-%H%M.%f")
     name = context.invokeFactory(type_name='Image', id=uid)
     obj = context[name]
     obj.setImage(base64.b64decode(data))

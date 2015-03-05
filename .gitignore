@@ -1,5 +1,4 @@
 *.py[cod]
-pip-selfcheck.json
 
 # C extensions
 *.so
@@ -18,7 +17,6 @@ develop-eggs
 .installed.cfg
 lib
 lib64
-include
 
 # Installer logs
 pip-log.txt
