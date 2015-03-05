@@ -6,9 +6,7 @@ from plone.app.testing import IntegrationTesting
 from plone.app.testing import FunctionalTesting
 from plone.app.robotframework.testing import AUTOLOGIN_LIBRARY_FIXTURE
 from plone.app.testing import PLONE_FIXTURE
-from zope.configuration import xmlconfig
 
-#import collective.clipboardupload
 
 class ClipboarduploadtLayer(PloneSandboxLayer):
 
@@ -17,11 +15,7 @@ class ClipboarduploadtLayer(PloneSandboxLayer):
     def setUpZope(self, app, configurationContext):
         # Load ZCML
         import collective.clipboardupload
-        xmlconfig.file(
-            'configure.zcml',
-            collective.clipboardupload,
-            context=configurationContext
-        )
+        self.loadZCML(package=collective.clipboardupload)
 
     def setUpPloneSite(self, portal):
         workflowTool = getToolByName(portal, 'portal_workflow')
@@ -31,3 +25,6 @@ COLLECTIVE_CLIPBOARDUPLOAD_FIXTURE = ClipboarduploadtLayer()
 COLLECTIVE_CLIPBOARDUPLOAD_ROBOT_TESTING = FunctionalTesting(
     bases=(COLLECTIVE_CLIPBOARDUPLOAD_FIXTURE, AUTOLOGIN_LIBRARY_FIXTURE, z2.ZSERVER),
     name="collective.clipboardupload:Robot")
+COLLECTIVE_CLIPBOARDUPLOAD_FUNCTIONAL_TESTING = FunctionalTesting(
+    bases=(COLLECTIVE_CLIPBOARDUPLOAD_FIXTURE,),
+    name="collective.clipboardupload:Functional")
