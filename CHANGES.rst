@@ -2,8 +2,8 @@ Changelog
 =========
 
 
-1.1 (unreleased)
-----------------
+1.0.post1 (2015-03-16)
+----------------------
 
 - Nothing changed yet.
 
