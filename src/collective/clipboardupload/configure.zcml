@@ -13,4 +13,11 @@
     handler=".imageupload.extract_image_data_from_body"
     />
 
+  <subscriber
+    for="plone.app.contenttypes.interfaces.IDocument
+         zope.lifecycleevent.interfaces.IObjectModifiedEvent"
+    handler=".imageupload.extract_image_data_from_body_dx"
+    />
+
+
 </configure>

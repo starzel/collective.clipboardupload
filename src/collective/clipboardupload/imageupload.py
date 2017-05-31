@@ -91,6 +91,8 @@ import operator
 from itertools import ifilter
 from datetime import datetime
 from bs4 import BeautifulSoup
+from plone import api
+from plone.app.textfield.value import RichTextValue
 from zope.event import notify
 
 RE_IMAGE_DATA = re.compile(r'data:image/\w{2,5};base64,(.+)')
@@ -149,3 +151,41 @@ def extract_image_data_from_body(context, event):
             image['src'] = 'resolveuid/%s' % resolved_uid
         if soup.html.body:
             context.setText(str(soup.html.body)[6:-7])  # just body without <body> tags
+
+
+
+def generate_image_object_dx(context, data):
+    """
+    Creates Image object on given context and returns its resolved UID
+
+    """
+    uid = 'Clipboard_image_%s' % DateTime().strftime("%Y-%m-%d-%H%M.%f")
+    obj = api.content.create(
+        container=context,
+        type='Image',
+        id=uid,
+        image=NamedBlobImage(data=base64.b64decode(data), filename=unicode(uid))
+     )
+    return obj.UID()
+
+
+def extract_image_data_from_body_dx(context, event):
+    """
+    EditedEvent event handler that creates Image objects from images data
+    inside Document text and replaces that data with
+    links to the created Images objects.
+    """
+    if not context.text or not context.text.raw:
+        return
+    soup = BeautifulSoup(context.text.raw)
+
+    if soup.html:
+        # we need collect both BS image objects and images data returned by RE
+        images = ((i, RE_IMAGE_DATA.search(i.get('src', ''))) \
+                   for i in soup.findAll('img'))
+        for image, data in ifilter(operator.itemgetter(1), images):
+            resolved_uid = generate_image_object_dx(context, data.group(1))
+            image['src'] = 'resolveuid/%s' % resolved_uid
+        if soup.html.body:
+            # just body without <body> tags
+            context.text = RichTextValue(str(soup.html.body)[6:-7], 'text/html', 'text/x-html-safe')
