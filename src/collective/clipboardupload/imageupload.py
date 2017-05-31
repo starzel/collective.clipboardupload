@@ -93,6 +93,7 @@ from datetime import datetime
 from bs4 import BeautifulSoup
 from plone import api
 from plone.app.textfield.value import RichTextValue
+from plone.namedfile.file import NamedBlobImage
 from zope.event import notify
 
 RE_IMAGE_DATA = re.compile(r'data:image/\w{2,5};base64,(.+)')
@@ -111,7 +112,7 @@ def generate_image_id(context):
     :returns: Unique id for the image object
     :rtype: string
     """
- 
+
     if getattr(context, 'generate_image_id', None):
         meth = context.generate_image_id
     else:
@@ -153,19 +154,21 @@ def extract_image_data_from_body(context, event):
             context.setText(str(soup.html.body)[6:-7])  # just body without <body> tags
 
 
-
 def generate_image_object_dx(context, data):
     """
     Creates Image object on given context and returns its resolved UID
 
     """
-    uid = 'Clipboard_image_%s' % DateTime().strftime("%Y-%m-%d-%H%M.%f")
+    if not context.isPrincipiaFolderish:
+        context = context.__parent__
+    uid = generate_image_id(context)
     obj = api.content.create(
         container=context,
         type='Image',
         id=uid,
-        image=NamedBlobImage(data=base64.b64decode(data), filename=unicode(uid))
-     )
+        image=NamedBlobImage(
+            data=base64.b64decode(data), filename=unicode(uid)),
+    )
     return obj.UID()
 
 
